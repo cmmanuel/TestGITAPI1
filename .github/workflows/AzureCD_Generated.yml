@@ -1,0 +1,37 @@
+name: Azure CI Generated
+
+on:
+  workflow_run:
+    workflows: [Azure CI Generated]
+    types: [completed]
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+  on-success:
+    runs-on: windows-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: test-git-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'test-git-app'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_ec79cf977814425f9c76fc998195db0e }}
+          package: .
+      - run: echo 'The triggering workflow passed'
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'The triggering workflow failed'
