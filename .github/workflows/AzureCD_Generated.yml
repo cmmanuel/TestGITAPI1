@@ -1,4 +1,4 @@
-name: Azure CI Generated
+name: Azure CD Generated
 
 on:
   workflow_dispatch:
