@@ -28,4 +28,4 @@ jobs:
       run: nuget restore TestGITAPI1.sln
 
     - name: Build the Solution
-      run: msbuild TestGITAPI.sln
+      run: msbuild TestGITAPI1.sln
