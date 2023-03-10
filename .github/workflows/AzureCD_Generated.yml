@@ -1,0 +1,26 @@
+name: Azure CI Generated
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: test-git-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'test-git-app'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_ec79cf977814425f9c76fc998195db0e }}
+          package: .
