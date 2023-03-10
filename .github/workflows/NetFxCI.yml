@@ -24,4 +24,4 @@ jobs:
       run: nuget restore TestGITAPI1.sln
 
     - name: Build the Solution
-      run: msbuild TestGITAPI1.sln
+      run: msbuild TestGITAPI1.sln /p:Configuration=Release
